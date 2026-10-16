@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EasyMath - Maths Practice</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f1f5ff;
+  color: #183153;
+}
+header {
+  background: #244fc5;
+  color: white;
+  text-align: center;
+  padding: 28px 12px;
+}
+header h1 { margin: 0; font-size: 34px; }
+header p { margin-bottom: 0; }
+main {
+  max-width: 650px;
+  margin: 22px auto;
+  padding: 0 12px;
+}
+.card {
+  background: white;
+  padding: 20px;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px #00000010;
+}
+label { display: block; margin: 14px 0 6px; font-weight: bold; }
+select, input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccd5e5;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+button {
+  background: #244fc5;
+  color: white;
+  border: 0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 14px;
+  cursor: pointer;
+}
+.question {
+  padding: 14px 0;
+  border-bottom: 1px solid #e1e7f0;
+}
+.option {
+  display: block;
+  margin: 10px 0;
+  font-weight: normal;
+}
+.option input { width: auto; }
+#test, #result { display: none; }
+#timer { color: #b54708; font-weight: bold; }
+footer { text-align: center; padding: 20px; color: #667085; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>EasyMath</h1>
+  <p>Learn. Practise. Improve.</p>
+  <p>Maths practice for Classes 5–10 and 12</p>
+</header>
+
+<main>
+  <section class="card" id="home">
+    <h2>Free Maths Test</h2>
+    <p>Choose your class and curriculum to begin.</p>
+
+    <label for="grade">Choose Class</label>
+    <select id="grade">
+      <option>Class 5</option>
+      <option>Class 6</option>
+      <option>Class 7</option>
+      <option>Class 8</option>
+      <option>Class 9</option>
+      <option>Class 10</option>
+      <option>Class 12</option>
+    </select>
+
+    <label for="board">Choose Curriculum</label>
+    <select id="board">
+      <option>CBSE</option>
+      <option>ICSE</option>
+      <option>IGCSE</option>
+    </select>
+
+    <button onclick="startTest()">Start Free Test</button>
+  </section>
+
+  <section class="card" id="test">
+    <h2 id="testTitle">Maths Test</h2>
+    <p>Time remaining: <span id="timer">60:00</span></p>
+    <div id="questions"></div>
+    <button onclick="submitTest()">Submit Test</button>
+  </section>
+
+  <section class="card" id="result">
+    <h2>Your Result</h2>
+    <h3 id="score"></h3>
+    <div id="solutions"></div>
+    <button onclick="location.reload()">Try Again</button>
+  </section>
+
+  <section class="card">
+    <h2>Daily Practice</h2>
+    <p>Extra practice questions and topic-wise learning are coming soon!</p>
+  </section>
+</main>
+
+<footer>© 2026 EasyMath</footer>
+
+<script>
+const questions = [
+  {
+    q: "What is 25 × 4?",
+    options: ["50", "100", "75", "125"],
+    answer: "100",
+    explanation: "25 × 4 = 100."
+  },
+  {
+    q: "What is 3/4 as a decimal?",
+    options: ["0.25", "0.5", "0.75", "1.5"],
+    answer: "0.75",
+    explanation: "3 ÷ 4 = 0.75."
+  },
+  {
+    q: "What is the area of a rectangle of length 8 cm and width 5 cm?",
+    options: ["13 cm²", "26 cm²", "40 cm²", "80 cm²"],
+    answer: "40 cm²",
+    explanation: "Area = length × width = 8 × 5 = 40 cm²."
+  },
+  {
+    q: "Solve: x + 7 = 15.",
+    options: ["6", "7", "8", "9"],
+    answer: "8",
+    explanation: "x = 15 − 7 = 8."
+  },
+  {
+    q: "What is the sum of the angles in a triangle?",
+    options: ["90°", "180°", "270°", "360°"],
+    answer: "180°",
+    explanation: "The interior angles of a triangle add up to 180°."
+  }
+];
+
+let seconds = 3600;
+let timerInterval;
+let submitted = false;
+
+function startTest() {
+  document.getElementById("home").style.display = "none";
+  document.getElementById("test").style.display = "block";
+
+  document.getElementById("testTitle").textContent =
+    document.getElementById("grade").value + " " +
+    document.getElementById("board").value + " Maths Test";
+
+  const area = document.getElementById("questions");
+  area.innerHTML = "";
+
+  questions.forEach((item, i) => {
+    let html = `<div class="question"><p><b>${i + 1}. ${item.q}</b></p>`;
+    item.options.forEach(option => {
+      html += `<label class="option">
+        <input type="radio" name="q${i}" value="${option}">
+        ${option}
+      </label>`;
+    });
+    html += "</div>";
+    area.innerHTML += html;
+  });
+
+  seconds = 3600;
+  showTime();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    seconds--;
+    showTime();
+    if (seconds <= 0) submitTest();
+  }, 1000);
+}
+
+function showTime() {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  document.getElementById("timer").textContent =
+    String(mins).padStart(2, "0") + ":" +
+    String(secs).padStart(2, "0");
+}
+
+function submitTest() {
+  if (submitted) return;
+  submitted = true;
+  clearInterval(timerInterval);
+
+  let marks = 0;
+  let html = "";
+
+  questions.forEach((item, i) => {
+    const selected = document.querySelector(
+      `input[name="q${i}"]:checked`
+    );
+    const answer = selected ? selected.value : "Not answered";
+    const correct = answer === item.answer;
+    if (correct) marks++;
+
+    html += `<div class="question">
+      <p><b>${i + 1}. ${item.q}</b></p>
+      <p>Your answer: ${answer}</p>
+      <p>Correct answer: <b>${item.answer}</b></p>
+      <p>${item.explanation}</p>
+    </div>`;
+  });
+
+  document.getElementById("test").style.display = "none";
+  document.getElementById("result").style.display = "block";
+  document.getElementById("score").textContent =
+    "Your score: " + marks + " / " + questions.length;
+  document.getElementById("solutions").innerHTML = html;
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+  </html>
