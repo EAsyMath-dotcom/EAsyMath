@@ -198,20 +198,12 @@ function startTest() {
   document.getElementById("testTitle").textContent =
     document.getElementById("grade").value + " " +
     document.getElementById("board").value + " Maths Test";
-
+currentQuestion = 0;
+userAnswers = [];
   const area = document.getElementById("questions");
   area.innerHTML = "";
 
-  questions.forEach((item, i) => {
-    let html = `<div class="question"><p><b>${i + 1}. ${item.q}</b></p>`;
-    item.options.forEach(option => {
-      html += `<label class="option">
-        <input type="radio" name="q${i}" value="${option}">
-        ${option}
-      </label>`;
-    });
-    area.innerHTML += html + "</div>";
-  });
+showQuestion();
 
   seconds = 3600;
   showTime();
@@ -222,6 +214,52 @@ function startTest() {
   }, 1000);
 }
 
+function showQuestion() {
+  const area = document.getElementById("questions");
+  const item = questions[currentQuestion];
+
+  let html = `<div class="question">
+    <p><b>Question ${currentQuestion + 1} of ${questions.length}</b></p>
+    <p><b>${item.q}</b></p>`;
+
+  item.options.forEach(option => {
+    const checked = userAnswers[currentQuestion] === option ? "checked" : "";
+
+    html += `<label class="option">
+      <input type="radio" name="currentQ" value="${option}" ${checked}
+      onchange="userAnswers[currentQuestion] = this.value">
+      ${option}
+    </label>`;
+  });
+
+  html += `</div>`;
+
+  if (currentQuestion > 0) {
+    html += `<button onclick="previousQuestion()">Previous Question</button>`;
+  }
+
+  if (currentQuestion < questions.length - 1) {
+    html += `<button onclick="nextQuestion()">Next Question</button>`;
+  } else {
+    html += `<button onclick="submitTest()">Submit Test</button>`;
+  }
+
+  area.innerHTML = html;
+}
+
+function nextQuestion() {
+  if (currentQuestion < questions.length - 1) {
+    currentQuestion++;
+    showQuestion();
+  }
+}
+
+function previousQuestion() {
+  if (currentQuestion > 0) {
+    currentQuestion--;
+    showQuestion();
+  }
+      }
 function showTime() {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
@@ -239,8 +277,8 @@ function submitTest() {
   let html = "";
 
   questions.forEach((item, i) => {
-    const selected = document.querySelector(`input[name="q${i}"]:checked`);
-    const answer = selected ? selected.value : "Not answered";
+    
+const answer = userAnswers[i] || "Not answered";
     const correct = answer === item.answer;
     if (correct) marks += 2;
 
