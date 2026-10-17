@@ -76,6 +76,17 @@ footer { text-align: center; padding: 20px; color: #667085; }
 </header>
 
 <main>
+  
+<section class="card" id="menu">
+  <h2>Welcome to Easy Math!</h2>
+  <p>Learn Maths, practise daily and test your skills.</p>
+
+  <button onclick="showPage('home')">Free Mock Tests</button>
+
+  <button onclick="showPage('practice')">Daily Practice</button>
+
+  <button onclick="showPage('classes')">Choose Your Class</button>
+</section>
   <section class="card" id="home">
     <h2>Free Maths Test</h2>
     <p>Choose your class and curriculum to begin.</p>
@@ -101,14 +112,14 @@ footer { text-align: center; padding: 20px; color: #667085; }
     <button onclick="startTest()">Start Free Test</button>
   </section>
 
-  <section class="card" id="test">
+  <section class="card" id="test" style="display:none;">
     <h2 id="testTitle">Maths Test</h2>
     <p>Time remaining: <span id="timer">60:00</span></p>
     <div id="questions"></div>
     <button onclick="submitTest()">Submit Test</button>
   </section>
 
-  <section class="card" id="result">
+  <section class="card" id="result" style="display:none;">
     <h2>Your Result</h2>
     <h3 id="score"></h3>
     <div id="solutions"></div>
@@ -116,7 +127,7 @@ footer { text-align: center; padding: 20px; color: #667085; }
   </section>
 
   
-<section class="card" id="practice">
+<section class="card" id="practice" style="display:none;">
   <h2>Daily Practice</h2>
   <p>Practise Maths and check your answers!</p>
 <p>Time left: <span id="practiceTimer">30:00</span></p>
@@ -338,7 +349,20 @@ function checkPractice() {
     "Your score: " + score + " / 5";
   document.getElementById("practiceSolutions").innerHTML = output;
 }
-     </script>
+  function showPage(pageId) {
+  document.getElementById("menu").style.display = "none";
+  document.getElementById("home").style.display = "none";
+  document.getElementById("test").style.display = "none";
+  document.getElementById("result").style.display = "none";
+  document.getElementById("practice").style.display = "none";
+
+  if (pageId === "classes") {
+    document.getElementById("home").style.display = "block";
+  } else {
+    document.getElementById(pageId).style.display = "block";
+  }
+  }
+    </script>
 
 </body>
   </html>
