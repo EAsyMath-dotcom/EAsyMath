@@ -147,12 +147,59 @@ footer { text-align: center; padding: 20px; color: #667085; }
   <h3 id="practiceResult"></h3>
   <div id="practiceSolutions"></div>
 </section>
+  
+<section class="card" id="sure" style="display:none;">
+  <h2>Sure Shot Questions</h2>
+  <p>Practise important Maths questions.</p>
+
+  <label for="sureGrade">Choose Class</label>
+  <select id="sureGrade">
+    <option>Class 5</option>
+    <option>Class 6</option>
+    <option>Class 7</option>
+    <option>Class 8</option>
+    <option>Class 9</option>
+    <option>Class 10</option>
+    <option>Class 12</option>
+  </select>
+
+  <label for="sureBoard">Choose Curriculum</label>
+  <select id="sureBoard">
+    <option>CBSE</option>
+    <option>ICSE</option>
+    <option>IGCSE</option>
+  </select>
+
+  <p>Important questions will be added here.</p>
+  <button onclick="showPage('menu')">Back to Home</button>
+</section>
 </main>
 
 <footer>© 2026 EasyMath</footer>
 
 
 <script>
+  
+
+function showPage(pageId) {
+  document.getElementById("menu").style.display = "none";
+  document.getElementById("home").style.display = "none";
+  document.getElementById("test").style.display = "none";
+  document.getElementById("result").style.display = "none";
+  document.getElementById("practice").style.display = "none";
+  document.getElementById("sure").style.display = "none";
+
+  if (pageId === "menu") {
+    document.getElementById("menu").style.display = "block";
+  } else if (pageId === "classes") {
+    document.getElementById("home").style.display = "block";
+  } else {
+    document.getElementById(pageId).style.display = "block";
+  }
+
+  window.scrollTo(0, 0);
+}
+
 const questions = [
   {q:"What is 25 × 4?", options:["50","100","75","125"], answer:"100", explanation:"25 × 4 = 100."},
   {q:"What is 3/4 as a decimal?", options:["0.25","0.5","0.75","1.5"], answer:"0.75", explanation:"3 ÷ 4 = 0.75."},
