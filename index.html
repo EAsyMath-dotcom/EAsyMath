@@ -115,54 +115,73 @@ footer { text-align: center; padding: 20px; color: #667085; }
     <button onclick="location.reload()">Try Again</button>
   </section>
 
-  <section class="card">
-    <h2>Daily Practice</h2>
-    <p>Extra practice questions and topic-wise learning are coming soon!</p>
-  </section>
+  
+<section class="card" id="practice">
+  <h2>Daily Practice</h2>
+  <p>Practise Maths and check your answers!</p>
+<p>Time left: <span id="practiceTimer">30:00</span></p>
+  <label for="practiceTopic">Choose a topic</label>
+  <select id="practiceTopic">
+    <option value="fractions">Fractions</option>
+    <option value="decimals">Decimals</option>
+    <option value="percentage">Percentage</option>
+  </select>
+
+  <button onclick="loadPractice()">Get Practice Questions</button>
+
+  <div id="practiceQuestions"></div>
+
+  <button onclick="checkPractice()">Check Answers</button>
+
+  <h3 id="practiceResult"></h3>
+  <div id="practiceSolutions"></div>
+</section>
 </main>
 
 <footer>© 2026 EasyMath</footer>
 
+
 <script>
 const questions = [
-  {
-    q: "What is 25 × 4?",
-    options: ["50", "100", "75", "125"],
-    answer: "100",
-    explanation: "25 × 4 = 100."
-  },
-  {
-    q: "What is 3/4 as a decimal?",
-    options: ["0.25", "0.5", "0.75", "1.5"],
-    answer: "0.75",
-    explanation: "3 ÷ 4 = 0.75."
-  },
-  {
-    q: "What is the area of a rectangle of length 8 cm and width 5 cm?",
-    options: ["13 cm²", "26 cm²", "40 cm²", "80 cm²"],
-    answer: "40 cm²",
-    explanation: "Area = length × width = 8 × 5 = 40 cm²."
-  },
-  {
-    q: "Solve: x + 7 = 15.",
-    options: ["6", "7", "8", "9"],
-    answer: "8",
-    explanation: "x = 15 − 7 = 8."
-  },
-  {
-    q: "What is the sum of the angles in a triangle?",
-    options: ["90°", "180°", "270°", "360°"],
-    answer: "180°",
-    explanation: "The interior angles of a triangle add up to 180°."
-  }
+  {q:"What is 25 × 4?", options:["50","100","75","125"], answer:"100", explanation:"25 × 4 = 100."},
+  {q:"What is 3/4 as a decimal?", options:["0.25","0.5","0.75","1.5"], answer:"0.75", explanation:"3 ÷ 4 = 0.75."},
+  {q:"Find the area of a rectangle of length 8 cm and width 5 cm.", options:["13 cm²","26 cm²","40 cm²","80 cm²"], answer:"40 cm²", explanation:"Area = 8 × 5 = 40 cm²."},
+  {q:"Solve: x + 7 = 15.", options:["6","7","8","9"], answer:"8", explanation:"x = 15 − 7 = 8."},
+  {q:"What is the sum of the angles in a triangle?", options:["90°","180°","270°","360°"], answer:"180°", explanation:"The angles of a triangle add up to 180°."},
+  {q:"What is 15% of 200?", options:["15","20","30","40"], answer:"30", explanation:"200 × 15/100 = 30."},
+  {q:"Calculate 3.6 + 2.45.", options:["5.05","6.05","6.5","5.95"], answer:"6.05", explanation:"3.60 + 2.45 = 6.05."},
+  {q:"Simplify 12/18.", options:["2/3","3/4","1/3","6/9"], answer:"2/3", explanation:"Divide numerator and denominator by 6."},
+  {q:"What is the perimeter of a square with side 6 cm?", options:["12 cm","24 cm","36 cm","18 cm"], answer:"24 cm", explanation:"Perimeter = 4 × 6 = 24 cm."},
+  {q:"Calculate 9².", options:["18","72","81","99"], answer:"81", explanation:"9 × 9 = 81."},
+  {q:"Find the mean of 4, 6 and 8.", options:["5","6","7","8"], answer:"6", explanation:"Mean = (4 + 6 + 8) ÷ 3 = 6."},
+  {q:"Convert 0.4 into a percentage.", options:["4%","14%","40%","400%"], answer:"40%", explanation:"0.4 × 100 = 40%."},
+  {q:"Solve: 3x = 21.", options:["6","7","8","9"], answer:"7", explanation:"x = 21 ÷ 3 = 7."},
+  {q:"How many sides does a hexagon have?", options:["5","6","7","8"], answer:"6", explanation:"A hexagon has 6 sides."},
+  {q:"Calculate 144 ÷ 12.", options:["10","11","12","14"], answer:"12", explanation:"144 ÷ 12 = 12."},
+  {q:"What is 2/5 + 1/5?", options:["3/10","3/5","2/10","1/5"], answer:"3/5", explanation:"Add the numerators: 2/5 + 1/5 = 3/5."},
+  {q:"Find 25% of 120.", options:["20","25","30","40"], answer:"30", explanation:"120 × 25/100 = 30."},
+  {q:"What is the value of 5³?", options:["15","25","75","125"], answer:"125", explanation:"5 × 5 × 5 = 125."},
+  {q:"Two angles of a triangle are 50° and 60°. Find the third angle.", options:["60°","70°","80°","90°"], answer:"70°", explanation:"180° − 50° − 60° = 70°."},
+  {q:"Calculate 7 × (8 − 3).", options:["25","30","35","40"], answer:"35", explanation:"7 × 5 = 35."},
+  {q:"What is the probability of getting a head when a fair coin is tossed?", options:["0","1/4","1/2","1"], answer:"1/2", explanation:"There are 2 equally likely outcomes; 1 is a head."},
+  {q:"Convert 3.5 km into metres.", options:["350 m","3500 m","35 m","35000 m"], answer:"3500 m", explanation:"3.5 × 1000 = 3500 m."},
+  {q:"Find the HCF of 12 and 18.", options:["2","3","6","9"], answer:"6", explanation:"The highest common factor is 6."},
+  {q:"What is 1.2 × 10?", options:["1.2","12","120","0.12"], answer:"12", explanation:"Multiplying by 10 gives 12."},
+  {q:"A book costs ₹80. You pay ₹100. How much change do you get?", options:["₹10","₹15","₹20","₹25"], answer:"₹20", explanation:"₹100 − ₹80 = ₹20."}
 ];
 
 let seconds = 3600;
 let timerInterval;
-let submitted = false;
+let testSubmitted = false;
+let practiceSeconds = 1800;
+let practiceInterval;
+let practiceSubmitted = false;
 
 function startTest() {
+  testSubmitted = false;
+  clearInterval(timerInterval);
   document.getElementById("home").style.display = "none";
+  document.getElementById("result").style.display = "none";
   document.getElementById("test").style.display = "block";
 
   document.getElementById("testTitle").textContent =
@@ -180,13 +199,11 @@ function startTest() {
         ${option}
       </label>`;
     });
-    html += "</div>";
-    area.innerHTML += html;
+    area.innerHTML += html + "</div>";
   });
 
   seconds = 3600;
   showTime();
-  clearInterval(timerInterval);
   timerInterval = setInterval(() => {
     seconds--;
     showTime();
@@ -203,20 +220,18 @@ function showTime() {
 }
 
 function submitTest() {
-  if (submitted) return;
-  submitted = true;
+  if (testSubmitted) return;
+  testSubmitted = true;
   clearInterval(timerInterval);
 
   let marks = 0;
   let html = "";
 
   questions.forEach((item, i) => {
-    const selected = document.querySelector(
-      `input[name="q${i}"]:checked`
-    );
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
     const answer = selected ? selected.value : "Not answered";
     const correct = answer === item.answer;
-    if (correct) marks++;
+    if (correct) marks += 2;
 
     html += `<div class="question">
       <p><b>${i + 1}. ${item.q}</b></p>
@@ -229,11 +244,101 @@ function submitTest() {
   document.getElementById("test").style.display = "none";
   document.getElementById("result").style.display = "block";
   document.getElementById("score").textContent =
-    "Your score: " + marks + " / " + questions.length;
+    "Your score: " + marks + " / 50";
   document.getElementById("solutions").innerHTML = html;
   window.scrollTo(0, 0);
 }
-</script>
+
+const practiceBank = {
+  fractions: [
+    {q:"What is 1/2 + 1/4?", a:"3/4", e:"1/2 = 2/4, so 2/4 + 1/4 = 3/4."},
+    {q:"What is 3/5 of 20?", a:"12", e:"20 ÷ 5 × 3 = 12."},
+    {q:"Simplify 6/8.", a:"3/4", e:"Divide the numerator and denominator by 2."},
+    {q:"What is 2/3 + 1/3?", a:"1", e:"3/3 = 1."},
+    {q:"What is 1/4 of 100?", a:"25", e:"100 ÷ 4 = 25."}
+  ],
+  decimals: [
+    {q:"Calculate 2.5 + 1.75.", a:"4.25", e:"2.50 + 1.75 = 4.25."},
+    {q:"Calculate 4.8 × 10.", a:"48", e:"Multiplying by 10 gives 48."},
+    {q:"Write 0.75 as a fraction in simplest form.", a:"3/4", e:"75/100 simplifies to 3/4."},
+    {q:"Calculate 6.4 − 2.1.", a:"4.3", e:"6.4 − 2.1 = 4.3."},
+    {q:"Calculate 0.5 × 6.", a:"3", e:"0.5 × 6 = 3."}
+  ],
+  percentage: [
+    {q:"Find 10% of 250.", a:"25", e:"250 × 10/100 = 25."},
+    {q:"Find 25% of 80.", a:"20", e:"80 × 25/100 = 20."},
+    {q:"Find 50% of 90.", a:"45", e:"50% means one half; 90 ÷ 2 = 45."},
+    {q:"Find 20% of 150.", a:"30", e:"150 × 20/100 = 30."},
+    {q:"A bag costs ₹200. Find 10% of its price.", a:"20", e:"200 × 10/100 = ₹20."}
+  ]
+};
+
+function loadPractice() {
+  clearInterval(practiceInterval);
+  practiceSubmitted = false;
+  practiceSeconds = 1800;
+
+  const topic = document.getElementById("practiceTopic").value;
+  const qs = practiceBank[topic];
+  const area = document.getElementById("practiceQuestions");
+
+  area.innerHTML = qs.map((item, i) => `
+    <div class="question">
+      <p><b>${i + 1}. ${item.q}</b></p>
+      <label for="practiceAnswer${i}">Your answer</label>
+      <input id="practiceAnswer${i}" type="text" placeholder="Type your answer">
+    </div>
+  `).join("");
+
+  document.getElementById("practiceResult").textContent = "";
+  document.getElementById("practiceSolutions").innerHTML = "";
+  showPracticeTime();
+
+  practiceInterval = setInterval(() => {
+    practiceSeconds--;
+    showPracticeTime();
+    if (practiceSeconds <= 0) checkPractice();
+  }, 1000);
+}
+
+function showPracticeTime() {
+  const mins = Math.floor(practiceSeconds / 60);
+  const secs = practiceSeconds % 60;
+  document.getElementById("practiceTimer").textContent =
+    String(mins).padStart(2, "0") + ":" +
+    String(secs).padStart(2, "0");
+}
+
+function checkPractice() {
+  if (practiceSubmitted) return;
+  practiceSubmitted = true;
+  clearInterval(practiceInterval);
+
+  const topic = document.getElementById("practiceTopic").value;
+  const qs = practiceBank[topic];
+  let score = 0;
+  let output = "";
+
+  qs.forEach((item, i) => {
+    const field = document.getElementById("practiceAnswer" + i);
+    const given = field ? field.value.trim().replace(/\s/g, "") : "";
+    const expected = item.a.replace(/\s/g, "");
+    const correct = given.toLowerCase() === expected.toLowerCase();
+
+    if (correct) score++;
+
+    output += `<div class="question">
+      <p>${i + 1}. ${correct ? "Correct!" : "Incorrect."}</p>
+      <p>Correct answer: <b>${item.a}</b></p>
+      <p>${item.e}</p>
+    </div>`;
+  });
+
+  document.getElementById("practiceResult").textContent =
+    "Your score: " + score + " / 5";
+  document.getElementById("practiceSolutions").innerHTML = output;
+}
+     </script>
 
 </body>
   </html>
